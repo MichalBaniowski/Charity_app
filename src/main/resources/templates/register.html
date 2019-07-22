@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css" />
+  </head>
+  <body>
+    <header>
+      <div th:insert="fragments/fragments.html :: navbar"></div>
+    </header>
+
+    <section class="login-page">
+      <h2>Załóż konto</h2>
+      <form th:action="@{/register}" method="post" th:object="${user}">
+        <div class="form-group">
+          <input name="email" placeholder="Nazwa użytkownika" th:field="*{username}" />
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" placeholder="Email" th:field="*{email}" />
+        </div>
+        <div class="form-group">
+          <input type="password" id="pass" name="password" placeholder="Hasło" th:field="*{password}"/>
+          <p class="error hidden-error error-password">hasła powinny być takie same</p>
+        </div>
+        <div class="form-group">
+          <input type="password" id="pass-confirm" name="password2" placeholder="Powtórz hasło" />
+          <p class="error hidden-error error-password">hasła powinny być takie same</p>
+        </div>
+
+        <div class="form-group form-group--buttons">
+          <a href="login.html" class="btn btn--without-border">Zaloguj się</a>
+          <button class="btn" type="submit" id="btn-submit">Załóż konto</button>
+        </div>
+      </form>
+    </section>
+    <div th:insert="fragments/fragments.html :: footer"></div>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script th:src="@{/js/register-form.js}"></script>
+  </body>
+</html>

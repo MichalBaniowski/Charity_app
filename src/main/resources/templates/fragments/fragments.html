@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<nav th:fragment="navbar" class="container container--70">
+    <ul th:if="${session.username}" class="nav--actions">
+        <li class="logged-user">
+            <h4 th:text="'Witaj ' + ${session.username}"></h4>
+            <ul class="dropdown">
+                <li><a href="#" th:href="@{/user}">Profil</a></li>
+                <li><a href="#">Ustawienia</a></li>
+                <li><a href="#" th:href="@{/user/donation}">Moje zbiórki</a></li>
+                <li><a href="#" th:href="@{/logout}">Wyloguj</a></li>
+            </ul>
+        </li>
+    </ul>
+    <ul th:unless="${session.username}" class="nav--actions">
+        <li><a href="" th:href="@{/login}" class="btn btn--small btn--without-border">Zaloguj</a></li>
+        <li><a href="#" th:href="@{/register}" class="btn btn--small btn--highlighted">Załóż konto</a></li>
+    </ul>
+    <ul>
+        <li><a href=""th:href="@{/}" class="btn btn--without-border active">Start</a></li>
+        <li><a href="#steps" class="btn btn--without-border">O co chodzi?</a></li>
+        <li><a href="#about-us" class="btn btn--without-border">O nas</a></li>
+        <li><a href="#help" class="btn btn--without-border">Fundacje i organizacje</a></li>
+        <li><a href="form.html" th:href="@{/user/donation/add}" class="btn btn--without-border">Przekaż dary</a></li>
+        <li><a href="#contact" class="btn btn--without-border">Kontakt</a></li>
+    </ul>
+</nav>
+<footer th:fragment="footer">
+    <div id="contact" class="contact">
+        <h2>Skontaktuj się z nami</h2>
+        <h3>Formularz kontaktowy</h3>
+        <form class="form--contact">
+            <div class="form-group form-group--50"><input type="text" name="name" placeholder="Imię" /></div>
+            <div class="form-group form-group--50"><input type="text" name="surname" placeholder="Nazwisko" /></div>
+            <div class="form-group"><textarea name="message" placeholder="Wiadomość" rows="1"></textarea></div>
+
+            <button class="btn" type="submit">Wyślij</button>
+        </form>
+    </div>
+    <div class="bottom-line">
+        <span class="bottom-line--copy">Copyright &copy; 2018</span>
+        <div class="bottom-line--icons">
+            <a href="#" class="btn btn--small"><img th:src="@{/img/icon-facebook.svg}"/></a> <a href="#" class="btn btn--small"><img th:src="@{/img/icon-instagram.svg}"/></a>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
