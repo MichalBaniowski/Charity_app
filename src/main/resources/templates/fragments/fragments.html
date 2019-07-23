@@ -13,7 +13,11 @@
                 <li><a href="#" th:href="@{/user}">Profil</a></li>
                 <li><a href="#">Ustawienia</a></li>
                 <li><a href="#" th:href="@{/user/donation}">Moje zbiórki</a></li>
-                <li><a href="#" th:href="@{/logout}">Wyloguj</a></li>
+                <li>
+                    <form class="logout-form" th:action="@{/logout}" method="post">
+                        <input type="submit" value="wyloguj" class="button-link">
+                    </form>
+                </li>
             </ul>
         </li>
     </ul>

@@ -5,7 +5,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.charity.authentication_model.CurrentUser;
 import pl.coderslab.charity.entity.Category;
@@ -47,8 +46,8 @@ public class DonationController {
 
     @GetMapping("")
     public String getAllUserDonations(Model model, @AuthenticationPrincipal CurrentUser user) {
-       model.addAttribute("donations", donationService.getAllUserDonations(user.getUser()));
-       return "user-donations";
+        model.addAttribute("donations", donationService.getAllUserDonations(user.getUser()));
+        return "user-donations";
     }
 
     @GetMapping("/add")
@@ -56,13 +55,19 @@ public class DonationController {
         model.addAttribute("donation", new Donation());
         return "form";
     }
+
     @PostMapping("/add")
-    public String processDonationForm(@Valid Donation donation, BindingResult bindingResult, @AuthenticationPrincipal CurrentUser user) {
-        if(bindingResult.hasErrors()) {
+    public String processDonationForm(@Valid Donation donation,
+                                      BindingResult bindingResult,
+                                      @AuthenticationPrincipal CurrentUser user,
+                                      Model model) {
+        if (bindingResult.hasErrors()) {
             return "form";
         }
         donation.setUser(user.getUser());
-        boolean result = donationService.saveDonation(donation);
-        return result ? "form-confirmation" : "form";
+        String prompt = donationService.saveDonation(donation) ?
+                "Udało się dodać darowiznę" : "Nie udało się dodać darowizny";
+        model.addAttribute("prompt", prompt);
+        return "result-prompt";
     }
 }

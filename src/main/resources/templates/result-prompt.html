@@ -10,8 +10,8 @@
   <body>
     <header class="header--form-page">
       <div th:insert="fragments/fragments.html :: navbar"></div>
-      <div class="slogan container container--90">
-          <h2>
+      <div class="container container--90 center-content-prompt">
+          <h2 th:text="${prompt}">
             Dziękujemy za przesłanie formularza Na maila prześlemy wszelkie
             informacje o odbiorze.
           </h2>

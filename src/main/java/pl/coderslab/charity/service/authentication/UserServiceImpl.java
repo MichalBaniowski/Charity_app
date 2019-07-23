@@ -31,16 +31,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(User user) {
-        saveUser(user, DEFAULT_USER_ROLE);
+    public boolean saveUser(User user) {
+        return saveUser(user, DEFAULT_USER_ROLE);
     }
 
     @Override
-    public void saveUser(User user, String roleName) {
+    public boolean saveUser(User user, String roleName) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEnabled(true); //TODO send email with activation token
         Role role = roleRepository.findByName(roleName);
         user.getRoles().add(role);
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return savedUser.getId() != null;
     }
 }

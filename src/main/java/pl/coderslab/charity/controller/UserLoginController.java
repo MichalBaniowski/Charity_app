@@ -25,12 +25,13 @@ public class UserLoginController {
     }
 
     @PostMapping("/register")
-    public String processRegister(@Valid User user, BindingResult bindingResult) {
+    public String processRegister(@Valid User user, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()) {
             return "register";
         }
-        userService.saveUser(user);
-        return "index";
+        String prompt = userService.saveUser(user) ? "Udało się storzyć konto" : "Nie udało się stworzyć konta";
+        model.addAttribute("prompt", prompt);
+        return "result-prompt";
     }
 
 }

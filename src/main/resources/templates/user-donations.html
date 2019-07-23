@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css" />
 </head>
 <body>
-<header class="header--main-page">
+<header class="header--donation-list-page">
     <div th:insert="fragments/fragments.html :: navbar"></div>
     <div class="slogan container container--90">
         <div class="slogan--item">
@@ -19,21 +19,35 @@
         </div>
     </div>
 </header>
-<section class="help">
+<section class="donation-list-page">
     <h2>Twoje Darowizny</h2>
-
-    <!-- SLIDE 1 -->
-    <div class="help--slides active" data-id="1">
-        <ul class="help--slides-items">
-            <li th:if="${donations.size() == 0}">Brak darowizn</li>
-            <li th:each="donation, iStat : ${donations}">
-                <div class="col">
-                    <div class="title" th:text="${donation.id}"></div>
-                    <div class="subtitle" th:text="'darowizna nr ' + ${iStat.count}"></div>
-                </div>
-            </li>
-        </ul>
-    </div>
+    <ul class="donation--slides-items">
+        <li th:if="${donations.size() == 0}">
+            <div class="col">
+                <div class="title">Brak darowizn</div>
+            </div>
+        </li>
+        <li th:each="donation, iStat : ${donations}" th:object="${donation}">
+            <div class="col">
+                <div class="title" th:text="${iStat.count}">1</div>
+            </div>
+            <div class="col">
+                <div class="title">Kategorie</div>
+                <div class="subtitle" th:each="category : *{categories}" th:text="${category.name}"></div>
+            </div>
+            <div class="col">
+                <div class="title">Instytucja</div>
+                <div class="subtitle" th:text="*{institution.name}"></div>
+            </div>
+            <div class="col">
+                <div class="title">Status</div>
+                <div class="subtitle">nieodebrane</div>
+            </div>
+            <div class="col">
+                <div class="title"><a href="#" class="btn-list">Szczegóły</a></div>
+            </div>
+        </li>
+    </ul>
 </section>
 
 <section id="steps" class="steps">
@@ -61,15 +75,6 @@
             <p>kurier przyjedzie w dogodnym terminie</p>
         </div>
     </div>
-</section>
-
-<section id="about-us" class="about-us">
-    <div class="about-us--text">
-        <h2>O nas</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas vitae animi rem pariatur incidunt libero optio esse quisquam illo omnis.</p>
-        <img th:src="@{/img/signature.svg}" class="about-us--text-signature" alt="Signature" />
-    </div>
-    <div class="about-us--image"><img th:src="@{/img/about-us.jpg}" alt="People in circle" /></div>
 </section>
 
 <div th:insert="fragments/fragments.html :: footer"></div>
