@@ -1,4 +1,10 @@
 INSERT INTO role(role) VALUES ('ROLE_USER');
+INSERT INTO role(role) VALUES ('ROLE_ADMIN');
+INSERT INTO role(role) VALUES ('ROLE_SUPER_ADMIN');
+
+INSERT INTO users(email, enabled, password, username) VALUES('admin@email', 1, '$2a$10$cN3SVg7y1feWzpSWJMc4UOHJRsANibzvIY83jG3M/YmXX85mHNyFW', 'admin');
+INSERT INTO user_role(user_id, role_id) VALUES(1,2);
+INSERT INTO user_role(user_id, role_id) VALUES(1,3);
 
 INSERT INTO institutions (name, description) VALUES ('Dbam o zdrowie', 'Pomoc dziecion z ubogich rodzin');
 INSERT INTO institutions (name, description) VALUES ('A kogo', 'Pomoc w wybudzaniu dzieci ze śpiączki');

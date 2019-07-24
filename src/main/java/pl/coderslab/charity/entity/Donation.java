@@ -29,7 +29,7 @@ public class Donation {
     @ManyToOne
     @JoinColumn(name = "institution_id")
     private Institution institution;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private User user;
     private String street;
