@@ -10,7 +10,9 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -24,12 +26,12 @@ public class Donation {
     private Long id;
     private int quantity;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "donation_category", joinColumns = @JoinColumn(name = "donation_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private List<Category> categories =new ArrayList<>();
+    @JoinTable(name = "donation_category", joinColumns = @JoinColumn(name = "donation_id"),inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories =new HashSet<>();
     @ManyToOne
     @JoinColumn(name = "institution_id")
     private Institution institution;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     private String street;
@@ -40,5 +42,6 @@ public class Donation {
     @DateTimeFormat(pattern = "HH:mm")
     private LocalTime pickUpTime;
     private String pickUpComment;
+    private String contactPhone;
 
 }

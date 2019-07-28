@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css" />
+</head>
+<body>
+<header class="header--main-page">
+    <div th:insert="fragments/fragments.html :: navbar"></div>
+</header>
+
+<section id="stats" class="stats">
+    <div class="container container--85">
+        <div class="stats--item">
+            <em th:text="${userCount}">10</em>
+            <h3>Zarejestrowanych użytkowników</h3>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius est beatae, quod accusamus illum tempora!</p>
+        </div>
+
+        <div class="stats--item">
+            <em th:text="${institutions.size()}">5</em>
+            <h3>Zarejestrowanych organizacji</h3>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam magnam, sint nihil cupiditate quas quam.</p>
+        </div>
+
+    </div>
+</section>
+
+<section id="help" class="help">
+    <h2>Komu pomagamy?</h2>
+    <!-- SLIDE 1 -->
+    <div class="help--slides active" data-id="1">
+        <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy.
+            Możesz sprawdzić czym się zajmują.</p>
+        <ul class="help--slides-items">
+            <th:block th:each="institution, iStat : ${institutions}">
+                <div th:class="${iStat.odd} ? 'box-list after-box' : 'box-list'">
+                    <div th:if="${iStat.even}"></div>
+                    <div class="col">
+                        <div class="title" th:text="'Fundacja &quot' + ${institution.name} +'&quot'">Fundacja "Dbam o Zdrowie"</div>
+                        <div class="subtitle" th:text="'Cel i misja: ' + ${institution.description}">Cel i misja: Pomoc dzieciom z ubogich rodzin.</div>
+                    </div>
+                    <div th:if="${iStat.odd}"></div>
+                </div>
+            </th:block>
+        </ul>
+    </div>
+</section>
+<div th:insert="fragments/fragments.html :: footer"></div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

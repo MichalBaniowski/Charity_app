@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.coderslab.charity.authentication_model.User;
 import pl.coderslab.charity.entity.Institution;
 import pl.coderslab.charity.exception.ElementNotFoundException;
+import pl.coderslab.charity.repository.DonationRepository;
 import pl.coderslab.charity.repository.InstitutionRepository;
 
 import java.util.List;
@@ -13,10 +14,12 @@ import java.util.List;
 public class InstitutionService {
 
     private InstitutionRepository institutionRepository;
+    private DonationRepository donationRepository;
 
     @Autowired
-    public InstitutionService(InstitutionRepository institutionRepository) {
+    public InstitutionService(InstitutionRepository institutionRepository, DonationRepository donationRepository) {
         this.institutionRepository = institutionRepository;
+        this.donationRepository = donationRepository;
     }
 
     public List<Institution> getAllInstitutions() {
@@ -24,7 +27,8 @@ public class InstitutionService {
     }
 
     public Institution findInstitutionById(Long id) {
-        return institutionRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Institution not found"));
+        return institutionRepository.findById(id)
+                .orElseThrow(() -> new ElementNotFoundException("Institution not found"));
     }
 
     public boolean saveInstitution(Institution institution) {
@@ -32,6 +36,8 @@ public class InstitutionService {
     }
 
     public boolean deleteInstitution(Long id) {
+        donationRepository.deleteAllByInstitution(institutionRepository.findById(id)
+                .orElseThrow(() -> new ElementNotFoundException("Institution not found")));
         institutionRepository.deleteById(id);
         return !institutionRepository.existsById(id);
     }

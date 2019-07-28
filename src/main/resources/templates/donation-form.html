@@ -9,7 +9,7 @@
   </head>
   <body>
     <header class="header--form-page">
-      <div th:insert="fragments/fragments.html :: navbar"></div>
+      <div th:insert="fragments/fragments.html :: navbar-short"></div>
 
       <div class="slogan container container--90">
         <div class="slogan--item">
@@ -62,7 +62,7 @@
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/4</div>
 
-        <form th:action="@{/user/donation/add}" th:object="${donation}" method="post">
+        <form th:action="@{/user/donations/add}" th:object="${donation}" method="post">
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
             <h3>Zaznacz co chcesz oddać:</h3>
@@ -144,7 +144,7 @@
 
                 <div class="form-group form-group--inline">
                   <label>
-                    Numer telefonu <input id="phone-number" type="phone" name="phone" />
+                    Numer telefonu <input id="phone-number" type="tel" th:field="*{contactPhone}"/>
                   </label>
                 </div>
               </div>
@@ -164,6 +164,9 @@
                     Uwagi dla kuriera
                     <textarea id="comment" th:field="*{pickUpComment}" rows="5"></textarea>
                   </label>
+                </div>
+                <div class="hidden-input">
+                    <input type="number" th:field="*{id}">
                 </div>
               </div>
             </div>

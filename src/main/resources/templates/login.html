@@ -9,7 +9,7 @@
   </head>
   <body>
     <header>
-      <div th:insert="fragments/fragments.html :: navbar"></div>
+      <div th:insert="fragments/fragments.html :: navbar-short"></div>
     </header>
 
     <section class="login-page">
@@ -24,7 +24,7 @@
         </div>
 
         <div class="form-group form-group--buttons">
-          <a href="#" class="btn btn--without-border">Załóż konto</a>      
+          <a th:href="@{/register}" class="btn btn--without-border">Załóż konto</a>
           <button class="btn" type="submit">Zaloguj się</button> 
         </div>
       </form>

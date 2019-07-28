@@ -19,7 +19,7 @@
                 <h4>Dane:</h4>
                 <ul>
                     <li>
-                        <h5>Nazwa użytkownika:</h5>
+                        <h5>Nazwa Administratora:</h5>
                         <span class="title" th:text="*{username}"></span>
                     </li>
                     <li>
@@ -27,7 +27,7 @@
                         <span class="title" th:text="*{email}"></span>
                     </li>
                     <li>
-                        <form th:action="@{/admin/users/edit}" method="post">
+                        <form th:action="@{/s_admin/admins/edit}" method="post">
                             <div  class="form-group">
                                 <h5>Status:</h5>
                                 <input type="checkbox" name="enabled" th:field="*{enabled}">
@@ -35,11 +35,14 @@
                             </div>
                             <div class="form-group">
                                 <h5>Role:</h5>
-                                <ul>
+                                <ul th:if="${roles}">
                                     <li th:each="role : ${roles}">
                                         <input type="checkbox" th:field="*{roles}" th:value="${role.id}">
                                         <label th:text="${role.name}"></label>
                                     </li>
+                                </ul>
+                                <ul th:unless="${roles}">
+                                    <li th:each="role : *{roles}" th:text="${role.name}"></li>
                                 </ul>
                             </div>
                             <div class="hidden-input">
@@ -48,7 +51,7 @@
                             <div class="form-group">
                                 <button class="btn" type="submit">Zapisz</button>
                                 <button type="button" class="btn">
-                                    <a th:href="@{/admin/users/{id}/delete(id=${user.id})}">Usuń użytkownika</a>
+                                    <a th:href="@{/s_admin/admins/{id}/delete(id=${user.id})}">Usuń administratora</a>
                                 </button>
                             </div>
                         </form>
@@ -59,32 +62,6 @@
     </div>
 </section>
 
-<section id="steps" class="steps">
-    <h2>Wystarczą 4 proste kroki</h2>
-
-    <div class="steps--container">
-        <div class="steps--item">
-            <span class="icon icon--hands"></span>
-            <h3>Wybierz rzeczy</h3>
-            <p>ubrania, zabawki, sprzęt i inne</p>
-        </div>
-        <div class="steps--item">
-            <span class="icon icon--arrow"></span>
-            <h3>Spakuj je</h3>
-            <p>skorzystaj z worków na śmieci</p>
-        </div>
-        <div class="steps--item">
-            <span class="icon icon--glasses"></span>
-            <h3>Zdecyduj komu chcesz pomóc</h3>
-            <p>wybierz zaufane miejsce</p>
-        </div>
-        <div class="steps--item">
-            <span class="icon icon--courier"></span>
-            <h3>Zamów kuriera</h3>
-            <p>kurier przyjedzie w dogodnym terminie</p>
-        </div>
-    </div>
-</section>
 
 <div th:insert="fragments/fragments.html :: footer"></div>
 <script th:src="@{/js/app.js}"></script>

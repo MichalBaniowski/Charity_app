@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import pl.coderslab.charity.converter.CategoryConverter;
 import pl.coderslab.charity.converter.InstitutionConverter;
+import pl.coderslab.charity.converter.RoleConverter;
 
 @Configuration
 @EnableWebMvc
@@ -36,6 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(institutionConverter());
         registry.addConverter(categoryConverter());
+        registry.addConverter(roleConverter());
     }
 
     @Bean
@@ -46,5 +48,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public InstitutionConverter institutionConverter() {
         return new InstitutionConverter();
+    }
+
+    @Bean
+    public RoleConverter roleConverter() {
+        return new RoleConverter();
     }
 }

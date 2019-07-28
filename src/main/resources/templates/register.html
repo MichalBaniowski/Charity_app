@@ -9,14 +9,13 @@
   </head>
   <body>
     <header>
-      <div th:insert="fragments/fragments.html :: navbar"></div>
+      <div th:insert="fragments/fragments.html :: navbar-short"></div>
     </header>
-
     <section class="login-page">
       <h2>Załóż konto</h2>
       <form th:action="@{/register}" method="post" th:object="${user}">
         <div class="form-group">
-          <input name="email" placeholder="Nazwa użytkownika" th:field="*{username}" />
+          <input name="username" placeholder="Nazwa użytkownika" th:field="*{username}" />
         </div>
         <div class="form-group">
           <input type="email" name="email" placeholder="Email" th:field="*{email}" />
@@ -31,7 +30,7 @@
         </div>
 
         <div class="form-group form-group--buttons">
-          <a href="login.html" class="btn btn--without-border">Zaloguj się</a>
+          <a th:href="@{/login}" class="btn btn--without-border">Zaloguj się</a>
           <button class="btn" type="submit" id="btn-submit">Załóż konto</button>
         </div>
       </form>

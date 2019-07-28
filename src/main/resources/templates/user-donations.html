@@ -9,7 +9,7 @@
 </head>
 <body>
 <header class="header--donation-list-page">
-    <div th:insert="fragments/fragments.html :: navbar"></div>
+    <div th:insert="fragments/fragments.html :: navbar-short"></div>
     <div class="slogan container container--90">
         <div class="slogan--item">
             <h1>
@@ -44,7 +44,7 @@
                 <div class="subtitle">nieodebrane</div>
             </div>
             <div class="col">
-                <div class="title"><a href="#" class="btn-list">Szczegóły</a></div>
+                <div class="title"><a th:href="@{/user/donations/{id}(id=${donation.id})}" class="btn-list">Szczegóły</a></div>
             </div>
         </li>
     </ul>

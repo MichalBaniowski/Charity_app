@@ -18,7 +18,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/user")
-@SessionAttributes("username")
+@SessionAttributes("adminMode")
 public class UserController {
 
     private DonationService donationService;
@@ -41,7 +41,7 @@ public class UserController {
 
     @RequestMapping("")
     public String getUserlandingPage(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
-        model.addAttribute("username", currentUser.getUsername());
+        model.addAttribute("adminMode", false);
         model.addAttribute("sumOfUserQuantities", donationService.getUserSumofDonationQuantity(currentUser.getUser()));
         model.addAttribute("userInstitutionDonatedCount", institutionService.getUserInstitutionDonatedCount(currentUser.getUser()));
         return "user-landing-page";
@@ -57,15 +57,20 @@ public class UserController {
     public String processEditForm(@AuthenticationPrincipal CurrentUser currentUser,
                                   @Valid User user,
                                   BindingResult bindingResult,
+                                  @RequestParam String oldPassword,
                                   Model model) {
         if (bindingResult.hasErrors()) {
             return "user-form";
         }
-        String prompt = userService.updateUser(user) ?
+        try{
+            String prompt = userService.updateUser(user, oldPassword) ?
                     "Zapisano zmiany" : "Nie udało się zapisać zmian";
-        //update email, password, username ?
-        currentUser.setUser(user);
-        model.addAttribute("prompt", prompt);
+            currentUser.setUser(user);
+            model.addAttribute("prompt", prompt);
+        } catch (Exception e) {
+            return "user-form";
+        }
+
         return "result-prompt";
     }
     @RequestMapping("/delete")

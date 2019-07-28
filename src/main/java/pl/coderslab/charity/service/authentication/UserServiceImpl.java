@@ -10,7 +10,9 @@ import pl.coderslab.charity.exception.ElementNotFoundException;
 import pl.coderslab.charity.repository.authentication.RoleRepository;
 import pl.coderslab.charity.repository.authentication.UserRepository;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -72,7 +74,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updateUser(User user) {
+    public boolean updateUser(User editedUser, String oldPassword) throws AuthenticationException {
+        User user = userRepository.findById(editedUser.getId())
+                .orElseThrow(() -> new ElementNotFoundException("User not found"));
+        if(!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new AuthenticationException("Wrong password");
+        }
+        editedUser.setEnabled(user.isEnabled());
+        editedUser.setRoles(user.getRoles());
+        editedUser.setEmail(user.getEmail());
+        editedUser.setPassword(passwordEncoder.encode(editedUser.getPassword()));
+        userRepository.save(editedUser);
+        return true;
+    }
+
+    @Override
+    public boolean updateUserByAdmin(User user) {
+        User userById = userRepository.findById(user.getId())
+                .orElseThrow(() -> new ElementNotFoundException("User not found"));
+        user.setUsername(userById.getUsername());
+        user.setPassword(userById.getPassword());
+        user.setEmail(userById.getEmail());
         userRepository.save(user);
         return true;
     }
@@ -84,20 +106,12 @@ public class UserServiceImpl implements UserService {
             throw new ActionForbiddenException("Cannot delete super admin");
         }
         userRepository.delete(user);
-        return userRepository.existsById(user.getId());
+        return !userRepository.existsById(user.getId());
     }
 
     @Override
-    public boolean deactivateUser(User user) {
-        user.setEnabled(false);
-        userRepository.save(user);
-        return true;
-    }
-
-    @Override
-    public boolean activateUser(User user) {
-        user.setEnabled(true);
-        userRepository.save(user);
-        return true;
+    public Integer getUserCount() {
+        Role role = roleRepository.findByName(DEFAULT_USER_ROLE);
+        return userRepository.countAllByRoles(role);
     }
 }

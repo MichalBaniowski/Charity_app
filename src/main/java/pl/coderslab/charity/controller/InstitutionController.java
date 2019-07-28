@@ -9,15 +9,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.coderslab.charity.entity.Institution;
+import pl.coderslab.charity.exception.ElementNotFoundException;
+import pl.coderslab.charity.service.DonationService;
 import pl.coderslab.charity.service.InstitutionService;
 
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("admin/institution")
+@RequestMapping("/admin/institutions")
 public class InstitutionController {
-    @Autowired
+    private DonationService donationService;
     private InstitutionService institutionService;
+
+    @Autowired
+    public InstitutionController(DonationService donationService, InstitutionService institutionService) {
+        this.donationService = donationService;
+        this.institutionService = institutionService;
+    }
 
     @GetMapping("")
     public String getAllInstitutions(Model model) {
@@ -27,8 +35,16 @@ public class InstitutionController {
 
     @GetMapping("/{id}")
     public String getInstitution(Model model, @PathVariable Long id) {
-        model.addAttribute("institution", institutionService.findInstitutionById(id));
-        return "institution-details";
+        try {
+            Institution institution = institutionService.findInstitutionById(id);
+            model.addAttribute("institution", institution);
+            model.addAttribute("donations", donationService.getAllDonationsByInstitution(institution));
+            return "institution-details";
+        } catch (ElementNotFoundException e) {
+            model.addAttribute("prompt", e.getMessage());
+            return "result-prompt";
+        }
+
     }
 
     @GetMapping("/create")
@@ -50,20 +66,26 @@ public class InstitutionController {
         return "result-prompt";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/{id}/edit")
     public String getInstitutionEditForm(Model model, @PathVariable Long id) {
-        Institution institution = institutionService.findInstitutionById(id);
-        model.addAttribute("institution", institution);
-        return "institution-form";
+        try {
+            Institution institution = institutionService.findInstitutionById(id);
+            model.addAttribute("institution", institution);
+            return "institution-edit-form";
+        } catch (ElementNotFoundException e) {
+            model.addAttribute("prompt", e.getMessage());
+            return "result-prompt";
+        }
+
     }
 
-    @PostMapping("/edit/{id}")
+    @PostMapping("/{id}/edit")
     public String proccessInstitutionEditForm(@Valid Institution institution,
                                               BindingResult bindingResult,
                                               @PathVariable Long id,
                                               Model model) {
-        if(bindingResult.hasErrors()) {
-            return "institution-form";
+        if (bindingResult.hasErrors()) {
+            return "institution-edit-form";
         }
         String prompt = institutionService.saveInstitution(institution) ?
                 "Zapisano zmiany" : "Nie udało się zapisać zmian";
@@ -71,11 +93,11 @@ public class InstitutionController {
         return "result-prompt";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/{id}/delete")
     public String deleteInstitution(Model model, @PathVariable Long id) {
         String prompt = institutionService.deleteInstitution(id) ?
                 "Organizacja usunięta" : "Nie udało się usunąć organizacji";
         model.addAttribute("prompt", prompt);
-        return"result-prompt";
+        return "result-prompt";
     }
 }

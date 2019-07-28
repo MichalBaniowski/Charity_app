@@ -3,6 +3,7 @@ package pl.coderslab.charity.service.authentication;
 import pl.coderslab.charity.authentication_model.Role;
 import pl.coderslab.charity.authentication_model.User;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
 
 public interface UserService {
@@ -18,11 +19,11 @@ public interface UserService {
 
     List<User> findAllAdmins();
 
-    boolean updateUser(User user);
+    boolean updateUser(User user, String newPassword) throws AuthenticationException;
+
+    boolean updateUserByAdmin(User user);
 
     boolean deleteUser(User user);
 
-    boolean deactivateUser(User user);
-
-    boolean activateUser(User user);
+    Integer getUserCount();
 }

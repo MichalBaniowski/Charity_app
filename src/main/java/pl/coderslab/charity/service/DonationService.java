@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import pl.coderslab.charity.authentication_model.Role;
 import pl.coderslab.charity.authentication_model.User;
 import pl.coderslab.charity.entity.Donation;
+import pl.coderslab.charity.entity.Institution;
 import pl.coderslab.charity.exception.ElementNotFoundException;
 import pl.coderslab.charity.repository.CategoryRepository;
 import pl.coderslab.charity.repository.DonationRepository;
+import pl.coderslab.charity.repository.authentication.RoleRepository;
 
 import java.util.List;
 
@@ -17,12 +19,15 @@ public class DonationService {
 
     private DonationRepository donationRepository;
     private CategoryRepository categoryRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
     public DonationService(DonationRepository donationRepository,
-                           CategoryRepository categoryRepository) {
+                           CategoryRepository categoryRepository,
+                           RoleRepository roleRepository) {
         this.donationRepository = donationRepository;
         this.categoryRepository = categoryRepository;
+        this.roleRepository = roleRepository;
     }
 
     public Integer getSumOfDonationQuantity() {
@@ -42,11 +47,15 @@ public class DonationService {
         return donationRepository.findAll();
     }
 
+    public List<Donation> getAllDonationsByInstitution(Institution institution) {
+        return donationRepository.findAllByInstitution(institution);
+    }
+
     public Donation getDonationById(Long id, User user) {
         Donation donation = donationRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Donation not found"));
         if (donation.getUser().getId() == user.getId() ||
-                user.getRoles().contains(new Role("ROLE_ADMIN"))) {
+                user.getRoles().contains(roleRepository.findByName("ROLE_ADMIN"))) {
             return donation;
         }
         throw new AccessDeniedException("Access denied");
@@ -66,6 +75,4 @@ public class DonationService {
             return false;
         }
     }
-
-
 }

@@ -12,12 +12,13 @@ public class RoleService {
 
     @Autowired
     private RoleRepository roleRepository;
-
-    public List<Role> getAllRoles() {
-        return roleRepository.findAll();
-    }
+    private final String SUPER_ADMIN_ROLE = "ROLE_SUPER_ADMIN";
 
     public Role findByRole(String role) {
         return roleRepository.findByName(role);
+    }
+
+    public List<Role> getAllRolesButSuperAdmin() {
+        return roleRepository.findAllByNameNot(SUPER_ADMIN_ROLE);
     }
 }
