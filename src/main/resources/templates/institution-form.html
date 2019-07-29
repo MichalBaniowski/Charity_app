@@ -16,9 +16,11 @@
     <form th:action="@{/admin/institutions/create}" method="post" th:object="${institution}">
         <div class="form-group">
             <input name="name" placeholder="Nazwa" th:field="*{name}"/>
+            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></p>
         </div>
         <div class="form-group">
             <textarea rows="5" name="description" th:field="*{description}" placeholder="Opis"/>
+            <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error"></p>
         </div>
         <div class="hidden-input">
             <input type="number" name="id" th:field="*{id}">

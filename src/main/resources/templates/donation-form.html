@@ -66,7 +66,7 @@
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
             <h3>Zaznacz co chcesz oddać:</h3>
-
+            <p th:if="${#fields.hasAnyErrors()}" class="error">uzupełnij poprawnie brakujące pola</p>
             <div class="form-group form-group--checkbox" th:each="category : ${categories}" >
               <label class="category-element">
                 <input type="checkbox" name="categories" th:value="${category.id}"/>
@@ -75,6 +75,7 @@
                   ubrania, które nadają się do ponownego użycia</span>
               </label>
             </div>
+            <p th:if="${#fields.hasErrors('categories')}" th:errors="*{categories}" class="error"></p>
             <div class="form-group form-group--buttons">
               <button type="button" class="btn next-step">Dalej</button>
             </div>
@@ -88,6 +89,7 @@
               <label>
                 Liczba worków:
                 <input id="quantity" type="number" th:field="*{quantity}" step="1" min="1" />
+                <p th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" class="error"></p>
               </label>
             </div>
 
@@ -114,7 +116,7 @@
                 </span>
               </label>
             </div>
-
+            <p th:if="${#fields.hasErrors('institution')}" th:errors="*{institution}" class="error"></p>
             <div class="form-group form-group--buttons">
               <button type="button" class="btn prev-step">Wstecz</button>
               <button type="button" class="btn next-step">Dalej</button>
@@ -130,21 +132,25 @@
                 <h4>Adres odbioru</h4>
                 <div class="form-group form-group--inline">
                   <label> Ulica <input id="street" type="text" th:field="*{street}" /> </label>
+                  <p th:if="${#fields.hasErrors('street')}" th:errors="*{street}" class="error"></p>
                 </div>
 
                 <div class="form-group form-group--inline">
                   <label> Miasto <input id="city" type="text" th:field="*{city}" /> </label>
+                  <p th:if="${#fields.hasErrors('city')}" th:errors="*{city}" class="error"></p>
                 </div>
 
                 <div class="form-group form-group--inline">
                   <label>
                     Kod pocztowy <input id="zip-code" type="text" th:field="*{zipCode}" />
+                    <p th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}" class="error"></p>
                   </label>
                 </div>
 
                 <div class="form-group form-group--inline">
                   <label>
                     Numer telefonu <input id="phone-number" type="tel" th:field="*{contactPhone}"/>
+                    <p th:if="${#fields.hasErrors('contactPhone')}" th:errors="*{contactPhone}" class="error"></p>
                   </label>
                 </div>
               </div>
@@ -153,16 +159,19 @@
                 <h4>Termin odbioru</h4>
                 <div class="form-group form-group--inline">
                   <label> Data <input id="date" type="date" th:field="*{pickUpDate}" /> </label>
+                  <p th:if="${#fields.hasErrors('pickUpDate')}" th:errors="*{pickUpDate}" class="error"></p>
                 </div>
 
                 <div class="form-group form-group--inline">
                   <label> Godzina <input id="time" type="time" th:field="*{pickUpTime}" /> </label>
+                  <p th:if="${#fields.hasErrors('pickUpTime')}" th:errors="*{pickUpTime}" class="error"></p>
                 </div>
 
                 <div class="form-group form-group--inline">
                   <label>
                     Uwagi dla kuriera
                     <textarea id="comment" th:field="*{pickUpComment}" rows="5"></textarea>
+                    <p th:if="${#fields.hasErrors('pickUpComment')}" th:errors="*{pickUpComment}" class="error"></p>
                   </label>
                 </div>
                 <div class="hidden-input">

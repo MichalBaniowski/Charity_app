@@ -18,6 +18,8 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
 
     List<Donation> findAllByUser(User user);
 
+    List<Donation> findAllByUserAndStatus(User user, boolean status);
+
     List<Donation> findAllByInstitution(Institution institution);
 
     @Query("SELECT SUM(d.quantity) FROM Donation d")

@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +18,8 @@ public class Institution {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "institution_id")
     private Long id;
+    @NotBlank
     private String name;
+    @Size(max = 250)
     private String description;
 }

@@ -16,13 +16,15 @@
     <h2>Edytuj konto</h2>
     <form th:action="@{/user/edit}" method="post" th:object="${user}">
         <div class="form-group">
-            <input name="email" placeholder="Nazwa użytkownika" th:field="*{username}" />
+            <input name="username" placeholder="Nazwa użytkownika" th:field="*{username}" />
+            <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error"></p>
         </div>
         <div class="form-group">
             <input type="password" name="oldPassword" placeholder="Stare hasło"/>
         </div>
         <div class="form-group">
             <input type="password" id="pass" name="password" placeholder="Hasło" th:field="*{password}"/>
+            <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error"></p>
             <p class="error hidden-error error-password">hasła powinny być takie same</p>
         </div>
         <div class="form-group">

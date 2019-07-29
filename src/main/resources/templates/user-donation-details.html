@@ -71,6 +71,10 @@
                         </li>
                         <li th:unless="*{pickUpComment}">Brak uwag</li>
                     </ul>
+                    <h4>Status:</h4>
+                    <ul>
+                        <li th:if="*{status}? 'Odebrane' : 'Nieodebrane'"></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -78,6 +82,7 @@
         <div class="form-group form-group--buttons">
             <button type="button" class="btn"><a th:href="@{/user/donations/{id}/edit(id=${donation.id})}">Edytuj</a></button>
             <button type="button" class="btn"><a th:href="@{/user/donations/{id}/cancel(id=${donation.id})}">Skasuj</a></button>
+            <button th:unless="${donation.status}" type="button" class="btn"><a href="#">Odebrane</a></button>
         </div>
     </div>
 </section>

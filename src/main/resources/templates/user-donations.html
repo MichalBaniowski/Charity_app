@@ -41,7 +41,7 @@
             </div>
             <div class="col">
                 <div class="title">Status</div>
-                <div class="subtitle">nieodebrane</div>
+                <div class="subtitle" th:text="*{status}? 'odebrane' : 'nieodebrane'"></div>
             </div>
             <div class="col">
                 <div class="title"><a th:href="@{/user/donations/{id}(id=${donation.id})}" class="btn-list">Szczegóły</a></div>
