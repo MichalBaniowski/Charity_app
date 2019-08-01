@@ -3,10 +3,12 @@ package pl.coderslab.charity.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import pl.coderslab.charity.authentication_model.User;
+import pl.coderslab.charity.entity.authentication.User;
 import pl.coderslab.charity.service.authentication.UserService;
+import pl.coderslab.charity.validator.ValidationByUserGroup;
 
 import javax.validation.Valid;
 
@@ -25,7 +27,7 @@ public class UserLoginController {
     }
 
     @PostMapping("/register")
-    public String processRegister(@Valid User user, BindingResult bindingResult, Model model) {
+    public String processRegister(@Validated({ValidationByUserGroup.class}) User user, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()) {
             return "register";
         }

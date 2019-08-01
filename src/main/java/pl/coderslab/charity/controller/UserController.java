@@ -6,9 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.charity.authentication_model.CurrentUser;
-import pl.coderslab.charity.authentication_model.User;
+import pl.coderslab.charity.entity.authentication.User;
 import pl.coderslab.charity.entity.Institution;
+import pl.coderslab.charity.security.model.LoggedUser;
 import pl.coderslab.charity.service.DonationService;
 import pl.coderslab.charity.service.InstitutionService;
 import pl.coderslab.charity.service.authentication.UserService;
@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @RequestMapping("")
-    public String getUserlandingPage(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
+    public String getUserlandingPage(@AuthenticationPrincipal LoggedUser currentUser, Model model) {
         model.addAttribute("adminMode", false);
         model.addAttribute("sumOfUserQuantities", donationService.getUserSumofDonationQuantity(currentUser.getUser()));
         model.addAttribute("userInstitutionDonatedCount", institutionService.getUserInstitutionDonatedCount(currentUser.getUser()));
@@ -48,13 +48,13 @@ public class UserController {
     }
 
     @GetMapping("/edit")
-    public String getEditForm(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
+    public String getEditForm(@AuthenticationPrincipal LoggedUser currentUser, Model model) {
         model.addAttribute("user", currentUser.getUser());
         return "user-form";
     }
 
     @PostMapping("/edit")
-    public String processEditForm(@AuthenticationPrincipal CurrentUser currentUser,
+    public String processEditForm(@AuthenticationPrincipal LoggedUser currentUser,
                                   @Valid User user,
                                   BindingResult bindingResult,
                                   @RequestParam String oldPassword,
@@ -74,7 +74,7 @@ public class UserController {
         return "result-prompt";
     }
     @RequestMapping("/delete")
-    public String delete(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
+    public String delete(@AuthenticationPrincipal LoggedUser currentUser, Model model) {
         try{
             userService.deleteUser(currentUser.getUser());
             return "redirect:/logout";

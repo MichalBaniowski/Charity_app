@@ -4,16 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import pl.coderslab.charity.authentication_model.User;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import pl.coderslab.charity.entity.authentication.Role;
+import pl.coderslab.charity.entity.authentication.User;
 import pl.coderslab.charity.exception.ActionForbiddenException;
 import pl.coderslab.charity.service.authentication.RoleService;
 import pl.coderslab.charity.service.authentication.UserService;
+import pl.coderslab.charity.validator.ValidationByAdminGroup;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/s_admin/admins")
@@ -28,6 +29,15 @@ public class SuperAdminController {
         this.roleService = roleService;
     }
 
+    @ModelAttribute("roles")
+    public List<Role> getRoles() {
+        return roleService.getAllRolesButSuperAdmin();
+    }
+    @ModelAttribute("superAdmin")
+    public boolean isSuperAdmin() {
+        return true;
+    }
+
     @GetMapping("")
     public String getAdmins(Model model) {
         model.addAttribute("admins", userService.findAllAdmins());
@@ -37,12 +47,11 @@ public class SuperAdminController {
     @GetMapping("/{id}")
     public String getAdminById(Model model, @PathVariable Long id) {
         model.addAttribute("user", userService.findById(id));
-        model.addAttribute("roles", roleService.getAllRolesButSuperAdmin());
         return "admin-details";
     }
 
     @PostMapping("/edit")
-    public String editAdmin(@Valid User user, BindingResult bindingResult, Model model) {
+    public String editAdmin(@Validated({ValidationByAdminGroup.class}) User user, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()) {
             return "admin-details";
         }

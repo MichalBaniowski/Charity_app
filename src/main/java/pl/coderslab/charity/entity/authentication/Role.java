@@ -1,4 +1,4 @@
-package pl.coderslab.charity.authentication_model;
+package pl.coderslab.charity.entity.authentication;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

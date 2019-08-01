@@ -1,12 +1,13 @@
-package pl.coderslab.charity.authentication_model;
+package pl.coderslab.charity.entity.authentication;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.coderslab.charity.validator.NotBlank;
+import pl.coderslab.charity.validator.ValidationByAdminGroup;
+import pl.coderslab.charity.validator.ValidationByUserGroup;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
@@ -22,16 +23,19 @@ public class User {
     @Column(name = "user_id")
     private Long id;
     @Column(unique = true, nullable = false)
-    @NotBlank
-    @Size(min = 5, max = 25)
+    @Size(min = 5, max = 25, groups = {ValidationByUserGroup.class})
+    @NotBlank(groups = {ValidationByUserGroup.class})
     private String username;
     @Column(nullable = false)
-    @Email
+    @Email(groups = {ValidationByUserGroup.class})
+    @NotBlank(groups = {ValidationByUserGroup.class})
     private String email;
     @Column(nullable = false)
-    @NotBlank
+    @NotBlank(groups = {ValidationByUserGroup.class})
+    @Size(min = 5, groups = {ValidationByUserGroup.class})
     private String password;
     private boolean enabled;
+    @NotEmpty(groups = {ValidationByAdminGroup.class})
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))

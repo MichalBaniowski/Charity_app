@@ -3,8 +3,8 @@ package pl.coderslab.charity.service.authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.coderslab.charity.authentication_model.Role;
-import pl.coderslab.charity.authentication_model.User;
+import pl.coderslab.charity.entity.authentication.Role;
+import pl.coderslab.charity.entity.authentication.User;
 import pl.coderslab.charity.exception.ActionForbiddenException;
 import pl.coderslab.charity.exception.ElementNotFoundException;
 import pl.coderslab.charity.repository.authentication.RoleRepository;
@@ -12,7 +12,6 @@ import pl.coderslab.charity.repository.authentication.UserRepository;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {

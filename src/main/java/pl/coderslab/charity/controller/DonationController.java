@@ -6,10 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.charity.authentication_model.CurrentUser;
 import pl.coderslab.charity.entity.Category;
 import pl.coderslab.charity.entity.Donation;
 import pl.coderslab.charity.entity.Institution;
+import pl.coderslab.charity.security.model.LoggedUser;
 import pl.coderslab.charity.service.CategoryService;
 import pl.coderslab.charity.service.DonationService;
 import pl.coderslab.charity.service.InstitutionService;
@@ -45,13 +45,13 @@ public class DonationController {
     }
 
     @GetMapping("")
-    public String getAllUserDonations(Model model, @AuthenticationPrincipal CurrentUser currentUser) {
+    public String getAllUserDonations(Model model, @AuthenticationPrincipal LoggedUser currentUser) {
         model.addAttribute("donations", donationService.getAllUserDonations(currentUser.getUser()));
         return "user-donations";
     }
 
     @GetMapping("/{id}")
-    public String getUserByid(Model model, @PathVariable Long id, @AuthenticationPrincipal CurrentUser currentUser) {
+    public String getUserByid(Model model, @PathVariable Long id, @AuthenticationPrincipal LoggedUser currentUser) {
         try {
             Donation donation = donationService.getDonationById(id, currentUser.getUser());
             model.addAttribute("donation", donation);
@@ -71,7 +71,7 @@ public class DonationController {
     @PostMapping("/add")
     public String processDonationForm(@Valid Donation donation,
                                       BindingResult bindingResult,
-                                      @AuthenticationPrincipal CurrentUser user,
+                                      @AuthenticationPrincipal LoggedUser user,
                                       Model model) {
         if (bindingResult.hasErrors()) {
             return "donation-form";
@@ -84,7 +84,9 @@ public class DonationController {
     }
 
     @GetMapping("/{id}/edit")
-    public String getDonationEditForm(@PathVariable Long id, Model model, @AuthenticationPrincipal CurrentUser currentUser) {
+    public String getDonationEditForm(@PathVariable Long id,
+                                      Model model,
+                                      @AuthenticationPrincipal LoggedUser currentUser) {
         try {
             Donation donation = donationService.getDonationById(id, currentUser.getUser());//TODO check status
             model.addAttribute("donation", donation);
@@ -109,7 +111,7 @@ public class DonationController {
     }
 
     @RequestMapping("/{id}/cancel")
-    public String cancelDonation(@PathVariable Long id, Model model, @AuthenticationPrincipal CurrentUser currentUser) {
+    public String cancelDonation(@PathVariable Long id, Model model, @AuthenticationPrincipal LoggedUser currentUser) {
         try {
             String prompt = donationService.deleteDonation(id, currentUser.getUser()) ?
                     "Usunięto dotację" : "Udało się usunąć dotację";

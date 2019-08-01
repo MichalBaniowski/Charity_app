@@ -6,9 +6,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import pl.coderslab.charity.authentication_model.CurrentUser;
-import pl.coderslab.charity.authentication_model.Role;
-import pl.coderslab.charity.authentication_model.User;
+import pl.coderslab.charity.entity.authentication.Role;
+import pl.coderslab.charity.entity.authentication.User;
+import pl.coderslab.charity.security.model.LoggedUser;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +28,6 @@ public class ApplicationUserDetailService implements UserDetailsService {
         for(Role role : user.getRoles()) {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         }
-        return new CurrentUser(user.getUsername(), user.getPassword(), grantedAuthorities, user);
+        return new LoggedUser(user.getUsername(), user.getPassword(), grantedAuthorities, user);
     }
 }

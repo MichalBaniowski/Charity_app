@@ -4,16 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import pl.coderslab.charity.authentication_model.User;
+import pl.coderslab.charity.entity.authentication.User;
+import pl.coderslab.charity.validator.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -40,23 +39,23 @@ public class Donation {
     @JoinColumn(name = "user_id")
     @NotNull
     private User user;
-    @Size(min = 1)
+    @NotBlank
     private String street;
-    @Size(min = 1)
+    @NotBlank
     private String city;
-    @Size(min = 1)
+    @NotBlank
     private String zipCode;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Size(min = 1)
+    @NotNull
     private LocalDate pickUpDate;
     @DateTimeFormat(pattern = "HH:mm")
-    @Size(min = 1)
+    @NotNull
     private LocalTime pickUpTime;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime created;
     @Size(max = 250)
     private String pickUpComment;
-    @Size(min = 1)
+    @NotBlank
     private String contactPhone;
     private boolean status;
 

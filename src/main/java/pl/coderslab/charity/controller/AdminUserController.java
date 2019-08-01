@@ -4,17 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.charity.authentication_model.CurrentUser;
-import pl.coderslab.charity.authentication_model.User;
+import pl.coderslab.charity.entity.authentication.Role;
+import pl.coderslab.charity.entity.authentication.User;
 import pl.coderslab.charity.entity.Institution;
 import pl.coderslab.charity.exception.ElementNotFoundException;
+import pl.coderslab.charity.security.model.LoggedUser;
 import pl.coderslab.charity.service.InstitutionService;
 import pl.coderslab.charity.service.authentication.RoleService;
 import pl.coderslab.charity.service.authentication.UserService;
+import pl.coderslab.charity.validator.ValidationByAdminGroup;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -44,8 +47,11 @@ public class AdminUserController {
         return userService.getUserCount();
     }
 
+    @ModelAttribute("roles")
+    public List<Role> getRoles() {return  roleService.getAllRolesButSuperAdmin();}
+
     @RequestMapping("")
-    public String getAdminLandingPage(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
+    public String getAdminLandingPage(@AuthenticationPrincipal LoggedUser currentUser, Model model) {
         model.addAttribute("adminMode", true);
         return "admin-landing-page";
     }
@@ -57,7 +63,7 @@ public class AdminUserController {
     }
 
     @GetMapping("/users/{id}")
-    public String getUser(Model model, @PathVariable Long id, @AuthenticationPrincipal CurrentUser currentUser) {
+    public String getUser(Model model, @PathVariable Long id, @AuthenticationPrincipal LoggedUser currentUser) {
         try{
             model.addAttribute("user", userService.findById(id));
         } catch (ElementNotFoundException e) {
@@ -66,13 +72,23 @@ public class AdminUserController {
         }
 
         if(currentUser.getUser().getRoles().contains(roleService.findByRole(SUPER_ADMIN_ROLE))) {
-            model.addAttribute("roles", roleService.getAllRolesButSuperAdmin());
+            model.addAttribute("superAdmin", true);
         }
         return "user-details";
     }
 
     @PostMapping("/users/edit")
-    public String editUser(@Valid User user, Model model) {
+    public String editUser(@Validated({ValidationByAdminGroup.class}) User user,
+                           BindingResult bindingResult,
+                           Model model,
+                           @AuthenticationPrincipal LoggedUser currentUser) {
+
+        if(bindingResult.hasErrors()) {
+            if(currentUser.getUser().getRoles().contains(roleService.findByRole(SUPER_ADMIN_ROLE))) {
+                model.addAttribute("superAdmin", true);
+            }
+            return "user-details";
+        }
         String prompt = userService.updateUserByAdmin(user) ? "Zapisano zmiany" : "Nie udało się zapisać zmian";
         model.addAttribute("prompt", prompt);
         return "result-prompt";

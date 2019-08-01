@@ -1,7 +1,6 @@
 package pl.coderslab.charity.service.authentication;
 
-import pl.coderslab.charity.authentication_model.Role;
-import pl.coderslab.charity.authentication_model.User;
+import pl.coderslab.charity.entity.authentication.User;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
