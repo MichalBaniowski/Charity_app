@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.coderslab.charity.entity.authentication.User;
 import pl.coderslab.charity.entity.Institution;
-import pl.coderslab.charity.exception.ElementNotFoundException;
+import pl.coderslab.charity.exception.ResourceNotFoundException;
 import pl.coderslab.charity.repository.DonationRepository;
 import pl.coderslab.charity.repository.InstitutionRepository;
 
@@ -28,7 +28,7 @@ public class InstitutionService {
 
     public Institution findInstitutionById(Long id) {
         return institutionRepository.findById(id)
-                .orElseThrow(() -> new ElementNotFoundException("Institution not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Institution not found"));
     }
 
     public boolean saveInstitution(Institution institution) {
@@ -37,7 +37,7 @@ public class InstitutionService {
 
     public boolean deleteInstitution(Long id) {
         donationRepository.deleteAllByInstitution(institutionRepository.findById(id)
-                .orElseThrow(() -> new ElementNotFoundException("Institution not found")));
+                .orElseThrow(() -> new ResourceNotFoundException("Institution not found")));
         institutionRepository.deleteById(id);
         return !institutionRepository.existsById(id);
     }

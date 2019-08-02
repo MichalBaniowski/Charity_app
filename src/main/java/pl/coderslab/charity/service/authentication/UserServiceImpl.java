@@ -6,12 +6,14 @@ import org.springframework.stereotype.Service;
 import pl.coderslab.charity.entity.authentication.Role;
 import pl.coderslab.charity.entity.authentication.User;
 import pl.coderslab.charity.exception.ActionForbiddenException;
-import pl.coderslab.charity.exception.ElementNotFoundException;
+import pl.coderslab.charity.exception.ResourceNotFoundException;
 import pl.coderslab.charity.repository.authentication.RoleRepository;
 import pl.coderslab.charity.repository.authentication.UserRepository;
+import pl.coderslab.charity.service.ActivationService;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,14 +24,17 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private BCryptPasswordEncoder passwordEncoder;
+    private ActivationService activationService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            RoleRepository roleRepository,
-                           BCryptPasswordEncoder passwordEncoder) {
+                           BCryptPasswordEncoder passwordEncoder,
+                           ActivationService activationService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.activationService = activationService;
     }
 
     @Override
@@ -40,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ElementNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Override
@@ -51,14 +56,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean saveUser(User user, String roleName) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setEnabled(true); //TODO send email with activation token
+        user.setEnabled(false);
         Role role = roleRepository.findByName(roleName);
         user.getRoles().add(role);
         User savedUser = userRepository.save(user);
+        System.out.println(activationService.getActivationLink(savedUser));
         return savedUser.getId() != null;
     }
 
-
+    @Override
+    public boolean activateUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("user not found"));
+        user.setEnabled(true);
+        user = userRepository.save(user);
+        return user.isEnabled();
+    }
 
     @Override
     public List<User> findAllUsers() {
@@ -75,7 +88,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUser(User editedUser, String oldPassword) throws AuthenticationException {
         User user = userRepository.findById(editedUser.getId())
-                .orElseThrow(() -> new ElementNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if(!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new AuthenticationException("Wrong password");
         }
@@ -90,7 +103,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUserByAdmin(User user) {
         User userById = userRepository.findById(user.getId())
-                .orElseThrow(() -> new ElementNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setUsername(userById.getUsername());
         user.setPassword(userById.getPassword());
         user.setEmail(userById.getEmail());

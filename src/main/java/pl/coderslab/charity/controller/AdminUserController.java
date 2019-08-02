@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import pl.coderslab.charity.entity.authentication.Role;
 import pl.coderslab.charity.entity.authentication.User;
 import pl.coderslab.charity.entity.Institution;
-import pl.coderslab.charity.exception.ElementNotFoundException;
+import pl.coderslab.charity.exception.ResourceNotFoundException;
 import pl.coderslab.charity.security.model.LoggedUser;
 import pl.coderslab.charity.service.InstitutionService;
 import pl.coderslab.charity.service.authentication.RoleService;
 import pl.coderslab.charity.service.authentication.UserService;
 import pl.coderslab.charity.validator.ValidationByAdminGroup;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -51,7 +50,7 @@ public class AdminUserController {
     public List<Role> getRoles() {return  roleService.getAllRolesButSuperAdmin();}
 
     @RequestMapping("")
-    public String getAdminLandingPage(@AuthenticationPrincipal LoggedUser currentUser, Model model) {
+    public String getAdminLandingPage(Model model) {
         model.addAttribute("adminMode", true);
         return "admin-landing-page";
     }
@@ -66,7 +65,7 @@ public class AdminUserController {
     public String getUser(Model model, @PathVariable Long id, @AuthenticationPrincipal LoggedUser currentUser) {
         try{
             model.addAttribute("user", userService.findById(id));
-        } catch (ElementNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             model.addAttribute("prompt", e.getMessage());
             return "result-prompt";
         }

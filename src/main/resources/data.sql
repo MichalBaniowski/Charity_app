@@ -40,6 +40,7 @@ INSERT INTO donations (quantity, institution_id, status, street, city, zip_code,
 INSERT INTO donations (quantity, institution_id, status, street, city, zip_code, created, pick_up_date, pick_up_time, pick_up_comment, user_id)  VALUES (5, 3, 0,'ul. Laczka 14', 'Pszczyna', '21-543', '2019-11-05 11:52', '2019-11-11', '18:30', 'zadzwonić', 4);--8
 INSERT INTO donations (quantity, institution_id, status, street, city, zip_code, created, pick_up_date, pick_up_time, user_id)  VALUES (4, 2, 0,'ul. św. Jakuba', 'Kraków', '31-943', '2019-10-06 07:34', '2019-10-13', '07:30', 2);--9
 INSERT INTO donations (quantity, institution_id, status, street, city, zip_code, created, pick_up_date, pick_up_time, pick_up_comment, user_id)  VALUES (5, 3, 0,'ul. Tkacza', 'Pszczyna', '21-543', '2019-08-12 18:55', '2019-08-17', '18:30', 'testowy', 1);--10
+INSERT INTO donations (quantity, institution_id, status, street, city, zip_code, created, pick_up_date, pick_up_time, pick_up_comment, user_id)  VALUES (5, 3, 1,'ul. Tkacza', 'Pszczyna', '21-543', '2019-01-13 18:25', '2019-02-18', '18:30', 'testowy2', 1);--11
 
 INSERT INTO donation_category (donation_id, category_id) VALUES (1, 2);
 INSERT INTO donation_category (donation_id, category_id) VALUES (1, 3);
@@ -58,3 +59,4 @@ INSERT INTO donation_category (donation_id, category_id) VALUES (8, 6);
 INSERT INTO donation_category (donation_id, category_id) VALUES (8, 5);
 INSERT INTO donation_category (donation_id, category_id) VALUES (9, 4);
 INSERT INTO donation_category (donation_id, category_id) VALUES (10, 1);
+INSERT INTO donation_category (donation_id, category_id) VALUES (11, 2);

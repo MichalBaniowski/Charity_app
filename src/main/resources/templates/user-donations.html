@@ -48,6 +48,10 @@
             </div>
         </li>
     </ul>
+    <div class="form-group form-group--buttons">
+        <button th:if="${receivedSorted}" type="button" class="btn"><a th:href="@{/user/donations}">Sortuj po nieodebranych</a></button>
+        <button th:unless="${receivedSorted}" type="button" class="btn"><a th:href="@{/user/donations/received}">Sortuj po odebranych</a></button>
+    </div>
 </section>
 
 <section id="steps" class="steps">

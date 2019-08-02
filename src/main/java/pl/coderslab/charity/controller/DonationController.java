@@ -45,8 +45,15 @@ public class DonationController {
     }
 
     @GetMapping("")
-    public String getAllUserDonations(Model model, @AuthenticationPrincipal LoggedUser currentUser) {
-        model.addAttribute("donations", donationService.getAllUserDonations(currentUser.getUser()));
+    public String getAllSortedByStatusNotReceivedUserDonations(Model model, @AuthenticationPrincipal LoggedUser currentUser) {
+        model.addAttribute("donations", donationService.getAllUserDonationsOrderByStatusNotReceived(currentUser.getUser()));
+        return "user-donations";
+    }
+
+    @GetMapping("/received")
+    public String getAllSortedByStatusReceivedUserDonations(Model model, @AuthenticationPrincipal LoggedUser currentUser) {
+        model.addAttribute("donations", donationService.getAllUserDonationsOrderByStatusReceived(currentUser.getUser()));
+        model.addAttribute("receivedSorted", true);
         return "user-donations";
     }
 

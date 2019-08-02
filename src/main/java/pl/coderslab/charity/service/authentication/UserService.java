@@ -25,4 +25,6 @@ public interface UserService {
     boolean deleteUser(User user);
 
     Integer getUserCount();
+
+    boolean activateUser(Long userId);
 }

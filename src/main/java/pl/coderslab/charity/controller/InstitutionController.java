@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.coderslab.charity.entity.Institution;
-import pl.coderslab.charity.exception.ElementNotFoundException;
+import pl.coderslab.charity.exception.ResourceNotFoundException;
 import pl.coderslab.charity.service.DonationService;
 import pl.coderslab.charity.service.InstitutionService;
 
@@ -40,7 +40,7 @@ public class InstitutionController {
             model.addAttribute("institution", institution);
             model.addAttribute("donations", donationService.getAllDonationsByInstitution(institution));
             return "institution-details";
-        } catch (ElementNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             model.addAttribute("prompt", e.getMessage());
             return "result-prompt";
         }
@@ -72,7 +72,7 @@ public class InstitutionController {
             Institution institution = institutionService.findInstitutionById(id);
             model.addAttribute("institution", institution);
             return "institution-edit-form";
-        } catch (ElementNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             model.addAttribute("prompt", e.getMessage());
             return "result-prompt";
         }
