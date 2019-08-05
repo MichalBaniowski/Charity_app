@@ -7,19 +7,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.coderslab.charity.entity.authentication.User;
-import pl.coderslab.charity.exception.ResourceNotFoundException;
 import pl.coderslab.charity.security.model.LoggedUser;
-import pl.coderslab.charity.service.ActivationService;
+import pl.coderslab.charity.service.AccountService;
 import pl.coderslab.charity.service.authentication.UserService;
 
 @Controller
 public class ActivationController {
 
     private UserService userService;
-    private ActivationService activationService;
+    private AccountService activationService;
 
     @Autowired
-    public ActivationController(UserService userService, ActivationService activationService) {
+    public ActivationController(UserService userService, AccountService activationService) {
         this.userService = userService;
         this.activationService = activationService;
     }
@@ -30,9 +29,6 @@ public class ActivationController {
                                Model model,
                                @AuthenticationPrincipal LoggedUser currentUser) {
         User user = userService.findById(userId);
-        if(user == null) {
-            throw new ResourceNotFoundException("user not found");
-        }
         String prompt;
         if (activationService.checkCode(code, user) &&
             userService.activateUser(userId)) {

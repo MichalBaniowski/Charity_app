@@ -3,6 +3,7 @@ package pl.coderslab.charity.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,14 @@ public class UserLoginController {
 
     @PostMapping("/register")
     public String processRegister(@Validated({ValidationByUserGroup.class}) User user, BindingResult bindingResult, Model model) {
+        if (userService.existsByUsername(user.getUsername())) {
+            FieldError fieldError = new FieldError("user", "username", "Username exists");
+            bindingResult.addError(fieldError);
+        }
+        if (userService.existsByEmail(user.getEmail())) {
+            FieldError fieldError = new FieldError("user", "email", "Email exists");
+            bindingResult.addError(fieldError);
+        }
         if(bindingResult.hasErrors()) {
             return "register";
         }

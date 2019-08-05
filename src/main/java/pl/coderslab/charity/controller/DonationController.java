@@ -58,9 +58,23 @@ public class DonationController {
     }
 
     @GetMapping("/{id}")
-    public String getUserByid(Model model, @PathVariable Long id, @AuthenticationPrincipal LoggedUser currentUser) {
+    public String getDonationByUserId(Model model, @PathVariable Long id, @AuthenticationPrincipal LoggedUser currentUser) {
         try {
             Donation donation = donationService.getDonationById(id, currentUser.getUser());
+            model.addAttribute("donation", donation);
+            return "user-donation-details";
+        } catch (Exception e) {
+            model.addAttribute("prompt", e.getMessage());
+            return "result-prompt";
+        }
+    }
+
+    @RequestMapping("/{id}/received")
+    public String setReceivedStatus(Model model, @PathVariable Long id, @AuthenticationPrincipal LoggedUser currentUser) {
+        try {
+            Donation donation = donationService.getDonationById(id, currentUser.getUser());
+            donation.setStatus(true);
+            donationService.saveDonation(donation);
             model.addAttribute("donation", donation);
             return "user-donation-details";
         } catch (Exception e) {

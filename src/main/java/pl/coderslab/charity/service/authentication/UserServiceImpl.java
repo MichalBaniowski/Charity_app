@@ -9,11 +9,11 @@ import pl.coderslab.charity.exception.ActionForbiddenException;
 import pl.coderslab.charity.exception.ResourceNotFoundException;
 import pl.coderslab.charity.repository.authentication.RoleRepository;
 import pl.coderslab.charity.repository.authentication.UserRepository;
-import pl.coderslab.charity.service.ActivationService;
+import pl.coderslab.charity.service.AccountService;
+import pl.coderslab.charity.service.EmailService;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,17 +24,20 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private BCryptPasswordEncoder passwordEncoder;
-    private ActivationService activationService;
+    private AccountService accountService;
+    private EmailService emailService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            RoleRepository roleRepository,
                            BCryptPasswordEncoder passwordEncoder,
-                           ActivationService activationService) {
+                           AccountService accountService,
+                           EmailService emailService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.activationService = activationService;
+        this.accountService = accountService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -60,8 +63,28 @@ public class UserServiceImpl implements UserService {
         Role role = roleRepository.findByName(roleName);
         user.getRoles().add(role);
         User savedUser = userRepository.save(user);
-        System.out.println(activationService.getActivationLink(savedUser));
+        String message = getActivationMessage(user.getUsername(),
+                accountService.getActivationLink(savedUser));
+        emailService.sendMessage(user.getEmail(), "Charity-app - aktywacja konta", message);
         return savedUser.getId() != null;
+    }
+
+    @Override
+    public void sendRestPasswordLink(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) throw new ResourceNotFoundException("user not found");
+        String message = getPasswordReminderMessage(user.getUsername(),
+                accountService.getChangePasswordLink(user));
+        emailService.sendMessage(user.getEmail(), "Charity-app - zmiana hasła", message);
+    }
+
+    private String getPasswordReminderMessage(String username, String passwordLink) {
+        return String.format("Link do zmiany hasła użytkownika %s: %s", username, passwordLink);
+    }
+
+    private String getActivationMessage(String username, String activationLink) {
+        return String.format("Witaj %s, aby aktywować konto kiknij w link aktywacyjny: %s",
+                username, activationLink);
     }
 
     @Override
@@ -101,6 +124,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void resetPassword(User user) {
+        User userFromDB = userRepository.findById(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        user.setEnabled(userFromDB.isEnabled());
+        user.setUsername(userFromDB.getUsername());
+        user.setRoles(userFromDB.getRoles());
+        user.setEmail(userFromDB.getEmail());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
     public boolean updateUserByAdmin(User user) {
         User userById = userRepository.findById(user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -125,5 +160,15 @@ public class UserServiceImpl implements UserService {
     public Integer getUserCount() {
         Role role = roleRepository.findByName(DEFAULT_USER_ROLE);
         return userRepository.countAllByRoles(role);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

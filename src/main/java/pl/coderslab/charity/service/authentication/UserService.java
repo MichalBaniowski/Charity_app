@@ -27,4 +27,12 @@ public interface UserService {
     Integer getUserCount();
 
     boolean activateUser(Long userId);
+
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
+
+    void sendRestPasswordLink(String email);
+
+    void resetPassword(User user);
 }

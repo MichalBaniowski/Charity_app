@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css" />
+</head>
+<body>
+<header>
+    <div th:insert="fragments/fragments.html :: navbar-short"></div>
+</header>
+
+<section class="login-page">
+    <h2>Podaj adres email</h2>
+    <form th:action="@{/forgot-password}" method="post">
+        <div class="form-group">
+            <input type="email" name="email" placeholder="Email" />
+            <p class="error" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+        </div>
+        <div class="form-group form-group--buttons">
+            <button class="btn" type="submit">Resetuj hasło</button>
+        </div>
+    </form>
+</section>
+<div th:insert="fragments/fragments.html :: footer"></div>
+</body>
+</html>

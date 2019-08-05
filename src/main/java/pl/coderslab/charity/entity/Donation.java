@@ -37,7 +37,6 @@ public class Donation {
     private Institution institution;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @NotNull
     private User user;
     @NotBlank
     private String street;
@@ -62,7 +61,6 @@ public class Donation {
     @PrePersist
     void prePersistSetCreated() {
         created = LocalDateTime.now();
-        status = false;
     }
 
 }
