@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.coderslab.charity.entity.authentication.Role;
 import pl.coderslab.charity.entity.authentication.User;
 import pl.coderslab.charity.entity.Institution;
-import pl.coderslab.charity.exception.ResourceNotFoundException;
 import pl.coderslab.charity.security.model.LoggedUser;
 import pl.coderslab.charity.service.InstitutionService;
 import pl.coderslab.charity.service.authentication.RoleService;
@@ -47,7 +46,9 @@ public class AdminUserController {
     }
 
     @ModelAttribute("roles")
-    public List<Role> getRoles() {return  roleService.getAllRolesButSuperAdmin();}
+    public List<Role> getRoles() {
+        return roleService.getAllRolesButSuperAdmin();
+    }
 
     @RequestMapping("")
     public String getAdminLandingPage(Model model) {
@@ -63,14 +64,9 @@ public class AdminUserController {
 
     @GetMapping("/users/{id}")
     public String getUser(Model model, @PathVariable Long id, @AuthenticationPrincipal LoggedUser currentUser) {
-        try{
-            model.addAttribute("user", userService.findById(id));
-        } catch (ResourceNotFoundException e) {
-            model.addAttribute("prompt", e.getMessage());
-            return "result-prompt";
-        }
+        model.addAttribute("user", userService.findById(id));
 
-        if(currentUser.getUser().getRoles().contains(roleService.findByRole(SUPER_ADMIN_ROLE))) {
+        if (currentUser.getUser().getRoles().contains(roleService.findByRole(SUPER_ADMIN_ROLE))) {
             model.addAttribute("superAdmin", true);
         }
         return "user-details";
@@ -82,8 +78,8 @@ public class AdminUserController {
                            Model model,
                            @AuthenticationPrincipal LoggedUser currentUser) {
 
-        if(bindingResult.hasErrors()) {
-            if(currentUser.getUser().getRoles().contains(roleService.findByRole(SUPER_ADMIN_ROLE))) {
+        if (bindingResult.hasErrors()) {
+            if (currentUser.getUser().getRoles().contains(roleService.findByRole(SUPER_ADMIN_ROLE))) {
                 model.addAttribute("superAdmin", true);
             }
             return "user-details";

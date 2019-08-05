@@ -35,16 +35,10 @@ public class InstitutionController {
 
     @GetMapping("/{id}")
     public String getInstitution(Model model, @PathVariable Long id) {
-        try {
-            Institution institution = institutionService.findInstitutionById(id);
-            model.addAttribute("institution", institution);
-            model.addAttribute("donations", donationService.getAllDonationsByInstitution(institution));
-            return "institution-details";
-        } catch (ResourceNotFoundException e) {
-            model.addAttribute("prompt", e.getMessage());
-            return "result-prompt";
-        }
-
+        Institution institution = institutionService.findInstitutionById(id);
+        model.addAttribute("institution", institution);
+        model.addAttribute("donations", donationService.getAllDonationsByInstitution(institution));
+        return "institution-details";
     }
 
     @GetMapping("/create")

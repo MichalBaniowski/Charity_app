@@ -33,6 +33,7 @@ public class SuperAdminController {
     public List<Role> getRoles() {
         return roleService.getAllRolesButSuperAdmin();
     }
+
     @ModelAttribute("superAdmin")
     public boolean isSuperAdmin() {
         return true;
@@ -51,8 +52,9 @@ public class SuperAdminController {
     }
 
     @PostMapping("/edit")
-    public String editAdmin(@Validated({ValidationByAdminGroup.class}) User user, BindingResult bindingResult, Model model) {
-        if(bindingResult.hasErrors()) {
+    public String editAdmin(@Validated({ValidationByAdminGroup.class}) User user,
+                            BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
             return "admin-details";
         }
         String prompt = userService.updateUserByAdmin(user) ?
@@ -63,18 +65,11 @@ public class SuperAdminController {
 
     @RequestMapping("/{id}/delete")
     public String deleteAdmin(@PathVariable Long id, Model model) {
-        try{
-            String prompt = userService.deleteUser(userService.findById(id)) ?
-                    "Administrator usunięty" : "Nie udało się usunąć administratora";
-            model.addAttribute("prompt", prompt);
-        }catch (ActionForbiddenException e) {
-            String prompt = e.getMessage();
-            model.addAttribute("prompt", prompt);
-        }
+        String prompt = userService.deleteUser(userService.findById(id)) ?
+                "Administrator usunięty" : "Nie udało się usunąć administratora";
+        model.addAttribute("prompt", prompt);
         return "result-prompt";
     }
-
-
 
 
 }

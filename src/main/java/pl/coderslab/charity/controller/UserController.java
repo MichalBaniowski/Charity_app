@@ -62,7 +62,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "user-form";
         }
-        try{
+        try {
             String prompt = userService.updateUser(user, oldPassword) ?
                     "Zapisano zmiany" : "Nie udało się zapisać zmian";
             currentUser.setUser(user);
@@ -73,15 +73,11 @@ public class UserController {
 
         return "result-prompt";
     }
+
     @RequestMapping("/delete")
     public String delete(@AuthenticationPrincipal LoggedUser currentUser, Model model) {
-        try{
-            userService.deleteUser(currentUser.getUser());
-            return "redirect:/logout";
-        }catch (RuntimeException e) {
-            model.addAttribute("prompt", e.getMessage());
-            return "result-prompt";
-        }
+        userService.deleteUser(currentUser.getUser());
+        return "redirect:/logout";
     }
 
 }
