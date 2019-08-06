@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NotBlank {
-    String message() default "must not be blank";
+    String message() default "{pl.coderslab.charity.validator.NotBlank.message}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

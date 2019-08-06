@@ -25,7 +25,7 @@ public class Donation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "donation_id")
     private Long id;
-    @Min(0)
+    @Min(1)
     private int quantity;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "donation_category", joinColumns = @JoinColumn(name = "donation_id"),inverseJoinColumns = @JoinColumn(name = "category_id"))
