@@ -22,10 +22,11 @@ This is a project created to summarize knowledge gained from CodersLab course.
 ![donation form](img/donation_form.png)
 
 ## Technologies
+* Java 8
 * Spring Boot - version 2.1.4 RELEASE
 * Spring Security
 * Spring Validation
-* Spring Data
+* Spring Data JPA
 * Data Base - MySql - version 8.0.13
 * ThymeLeaf - version 3.0.11. RELEASE
 
